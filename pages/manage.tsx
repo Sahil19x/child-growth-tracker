@@ -1,54 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ChildForm from '../components/ChildForm';
-import UploadDownload from '../components/UploadDownload';
+import { Child } from '../types/Child';  // Import shared type
+import UploadDownload from '../components/UploadDownload';  // Placeholder; define if needed
 import Link from 'next/link';
 
-interface Child {
-  name: string;
-  parentage: string;
-  dob: string;
-  gender: 'boy' | 'girl';
-}
-
-const Manage: React.FC = () => {
+export default function Manage() {
   const [children, setChildren] = useState<Child[]>([]);
 
-  useEffect(() => {
-    const storedChildren = localStorage.getItem('children');
-    if (storedChildren) {
-      setChildren(JSON.parse(storedChildren));
-    }
-  }, []);
+  const addChild = (newChild: Child) => {
+    const id = newChild.id ?? Date.now();
+    setChildren([...children, { ...newChild, id }]);
+  };
 
-  useEffect(() => {
-    localStorage.setItem('children', JSON.stringify(children));
-  }, [children]);
-
-  const addChild = (child: Child) => {
-    setChildren([...children, child]);
+  const handleUpload = (uploadedData: Child[]) => {
+    setChildren(uploadedData);
   };
 
   const handleDownload = () => {
-    const dataStr = JSON.stringify(children);
-    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-    const exportFileDefaultName = 'children.json';
-
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
-  };
-
-  const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const text = e.target?.result as string;
-        setChildren(JSON.parse(text));
-      };
-      reader.readAsText(file);
-    }
+    console.log('Downloading children data:', children);
+    // Add actual download logic (e.g., Blob for CSV/JSON)
   };
 
   return (
@@ -61,6 +31,4 @@ const Manage: React.FC = () => {
       </Link>
     </div>
   );
-};
-
-export default Manage;
+}
