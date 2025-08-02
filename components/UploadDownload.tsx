@@ -31,7 +31,7 @@ const UploadDownload: React.FC<UploadDownloadProps> = ({ onUpload, onDownload, d
           setError('Invalid data structure in file.');
         }
       } catch (err) {
-        setError('Failed to parse file—ensure it's valid JSON.');
+        setError('Failed to parse file - ensure it\'s valid JSON.');
       }
     };
     reader.readAsText(file);
@@ -63,4 +63,3 @@ const UploadDownload: React.FC<UploadDownloadProps> = ({ onUpload, onDownload, d
 };
 
 export default UploadDownload;
-    
