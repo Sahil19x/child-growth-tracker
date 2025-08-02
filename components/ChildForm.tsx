@@ -1,8 +1,14 @@
 import { useState, useEffect } from 'react';
 
+interface Child {
+  id?: number;
+  name: string;
+  age: number;
+}
+
 interface ChildFormProps {
-  onAddChild: (child: { name: string; age: number; id?: number }) => void;
-  initialChild?: { id: number; name: string; age: number };
+  onAddChild: (child: Child) => void;
+  initialChild?: Child;
 }
 
 const ChildForm: React.FC<ChildFormProps> = ({ onAddChild, initialChild }) => {
@@ -19,8 +25,10 @@ const ChildForm: React.FC<ChildFormProps> = ({ onAddChild, initialChild }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onAddChild({ id: initialChild?.id, name, age });
-    setName('');
-    setAge(0);
+    if (!initialChild) {
+      setName('');
+      setAge(0);
+    }
   };
 
   return (
