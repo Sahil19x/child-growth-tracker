@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import ChildForm from '../components/ChildForm';  // Import the missing component (adjust path if needed)
+import ChildForm from '../components/ChildForm';  // Adjust path if needed
 
 interface Child {
-  id: number;
+  id?: number;
   name: string;
   age: number;
 }
@@ -12,11 +12,13 @@ export default function Home() {
   const [editingChild, setEditingChild] = useState<Child | null>(null);
 
   const handleAddChild = (newChild: Child) => {
-    setChildren([...children, { ...newChild, id: children.length + 1 }]);
+    const id = newChild.id ?? Date.now();  // Use timestamp for unique id to avoid conflicts
+    setChildren([...children, { ...newChild, id }]);
   };
 
   const handleUpdate = (updatedChild: Child) => {
-    setChildren(children.map(child => child.id === updatedChild.id ? updatedChild : child));
+    if (updatedChild.id === undefined) return;  // Guard against missing id
+    setChildren(children.map(child => (child.id === updatedChild.id ? updatedChild : child)));
     setEditingChild(null);
   };
 
@@ -32,7 +34,7 @@ export default function Home() {
         {/* List of children */}
         <ul className="mb-6">
           {children.map(child => (
-            <li key={child.id} className="flex justify-between items-center mb-2">
+            <li key={child.id ?? Math.random()} className="flex justify-between items-center mb-2">
               {child.name} (Age: {child.age})
               <button onClick={() => startEditing(child)} className="ml-4 bg-blue-500 hover:bg-blue-600 text-white p-1 rounded">
                 Edit
