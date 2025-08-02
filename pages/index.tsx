@@ -1,23 +1,18 @@
 import { useState } from 'react';
-import ChildForm from '../components/ChildForm';  // Adjust path if needed
-
-interface Child {
-  id?: number;
-  name: string;
-  age: number;
-}
+import ChildForm from '../components/ChildForm';
+import { Child } from '../types/Child';  // Import shared type
 
 export default function Home() {
   const [children, setChildren] = useState<Child[]>([]);
   const [editingChild, setEditingChild] = useState<Child | null>(null);
 
   const handleAddChild = (newChild: Child) => {
-    const id = newChild.id ?? Date.now();  // Use timestamp for unique id to avoid conflicts
+    const id = newChild.id ?? Date.now();
     setChildren([...children, { ...newChild, id }]);
   };
 
   const handleUpdate = (updatedChild: Child) => {
-    if (updatedChild.id === undefined) return;  // Guard against missing id
+    if (updatedChild.id === undefined) return;
     setChildren(children.map(child => (child.id === updatedChild.id ? updatedChild : child)));
     setEditingChild(null);
   };
@@ -30,8 +25,6 @@ export default function Home() {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md max-w-md w-full">
         <h1 className="text-2xl font-bold mb-6">Child Management</h1>
-        
-        {/* List of children */}
         <ul className="mb-6">
           {children.map(child => (
             <li key={child.id ?? Math.random()} className="flex justify-between items-center mb-2">
@@ -42,12 +35,8 @@ export default function Home() {
             </li>
           ))}
         </ul>
-        
-        {/* Add new child form */}
         <h2 className="text-xl font-bold mb-4">Add Child</h2>
         <ChildForm onAddChild={handleAddChild} />
-        
-        {/* Edit child form (conditional) */}
         {editingChild && (
           <div className="mt-6">
             <h2 className="text-xl font-bold mb-4">Update Child</h2>
